@@ -1,6 +1,6 @@
 <h1>Matches for <%= account_id %></h1>
 <ul>
     <% matches.forEach(function(match){ %>
-        <li><%= match.match_id %></li>
+        <li><a href='/<%=account_id %>/<%=match.match_id %>'><%= match.match_id %></a></li>
     <% }); %>
 </ul>

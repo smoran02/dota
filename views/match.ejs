@@ -1,0 +1,6 @@
+<h1>Players in match <%= match_id %></h1>
+<ul>
+    <% players.forEach(function(player){ %>
+        <li><a href='/<%= player.account_id %>'><%= player.account_id %></a></li>
+    <% }); %>
+</ul>
