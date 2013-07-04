@@ -23,7 +23,7 @@
     <% players.forEach(function(player){ %>
         <tr>
             <td><a href='/player/<%= player.account_id %>'><%= player.account_id %></a></td>
-            <td><%= player.hero_id %></td>
+            <td><img src="<%= hero_idToName(player.hero_id) %>"><%= hero_idLocalizeName(player.hero_id) %></td>
             <td><%= player.level %></td>
             <td><%= player.kills %></td>
             <td><%= player.deaths %></td>

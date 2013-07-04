@@ -2,6 +2,11 @@ var request = require('request');
 var url = require('url');
 var express = require('express');
 var app = express();
+var redis = require('redis');
+var $ = require('jquery');
+var heroJSON;
+var itemJSON;
+
 app.engine('ejs', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 
@@ -9,8 +14,8 @@ app.locals.secondsToTime = function(totalSec){
     var hours = parseInt( totalSec / 3600 ) % 24;
     var minutes = parseInt( totalSec / 60 ) % 60;
     var seconds = totalSec % 60;
-
-    return hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);
+    var dateString = (hours <= 0 ? "" : hours + ":") + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds)
+    return dateString;
 }
 
 app.locals.timeToString = function(time){
@@ -19,7 +24,43 @@ app.locals.timeToString = function(time){
     return d.toLocaleTimeString() + " " + d.toDateString();
 }
 
-app.get('/', function(request, response){
+app.locals.hero_idToName = function(hero_id){
+    for (var i = 0; i < heroJSON.heroes.length; i++){
+        if (hero_id == heroJSON.heroes[i].id){
+            return 'http://media.steampowered.com/apps/dota2/images/heroes/' + heroJSON.heroes[i].name + '_sb.png';
+        }
+    }
+    return "Hero not found.";
+}
+
+app.locals.hero_idLocalizeName = function(hero_id){
+    for (var i = 0; i < heroJSON.heroes.length; i++){
+        if (hero_id == heroJSON.heroes[i].id){
+            return heroJSON.heroes[i].localized_name;
+        }
+    }
+    return "";
+}
+
+app.get('/heroes.json', function(request, response){
+    response.sendfile(__dirname + '/heroes.json');
+});
+
+app.get('/items.json', function(request, response){
+    response.sendfile(__dirname + '/items.json');
+});
+
+app.get('/', function(req, response){
+    options = {
+        protocol: 'http:',
+        host: 'localhost:8080',
+        pathname: '/heroes.json'
+    }
+
+    var jsonUrl = url.format(options);
+    request(jsonUrl, function(err, res, body){
+        heroJSON = JSON.parse(body);
+    });
     response.sendfile(__dirname + '/index.html');
 });
 
@@ -31,7 +72,7 @@ app.get('/match/:match_id', function(req, response){
         protocol: 'https:',
         host: 'api.steampowered.com',
         pathname: '/IDOTA2Match_570/GetMatchDetails/V001/',
-        query: {key: '0BDF16C29E3E9C541EF3AF2379797588', match_id: match_id}
+        query: {key: '7457139B765A368251CF1C88001496A3', match_id: match_id}
     }
 
     var dotaUrl = url.format(options);
@@ -50,7 +91,7 @@ app.get('/player/:account_id', function(req, response){
         protocol: 'https:',
         host: 'api.steampowered.com',
         pathname: '/IDOTA2Match_570/GetMatchHistory/V001/',
-        query: {key: '0BDF16C29E3E9C541EF3AF2379797588', account_id: account_id}
+        query: {key: '7457139B765A368251CF1C88001496A3', account_id: account_id}
     }
 
     var dotaUrl = url.format(options);
