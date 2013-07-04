@@ -1,6 +1,40 @@
 <h1>Players in match <%= match_id %></h1>
 <ul>
+    <li>Winning team: <% if (result.radiant_win){ %> Radiant Victory <%} else {
+        %> Dire Victory <%}%></li>
+    <li>Duration: <%- secondsToTime(result.duration) %></li>
+    <li>Start Time: <%- timeToString(result.start_time) %></li>
+    <li>Match Details: 
+    <table>
+        <tr>
+            <td>Player Name</td>
+            <td>Hero</td>
+            <td>Level</td>
+            <td>Kills</td>
+            <td>Deaths</td>
+            <td>Assists</td>
+            <td>Gold</td>
+            <td>LH</td>
+            <td>DN</td>
+            <td>XPM</td>
+            <td>GPM</td>
+            <td>Items</td>
+        </tr>
     <% players.forEach(function(player){ %>
-        <li><a href='/<%= player.account_id %>'><%= player.account_id %></a></li>
+        <tr>
+            <td><a href='/player/<%= player.account_id %>'><%= player.account_id %></a></td>
+            <td><%= player.hero_id %></td>
+            <td><%= player.level %></td>
+            <td><%= player.kills %></td>
+            <td><%= player.deaths %></td>
+            <td><%= player.assists %></td>
+            <td><%= Math.round((player.gold + player.gold_spent) / 100) / 10 %>k</td>
+            <td><%= player.last_hits %></td>
+            <td><%= player.denies %></td>
+            <td><%= player.xp_per_min %></td>
+            <td><%= player.gold_per_min %></td>
+            <td><%= player.item_0 %>, <%= player.item_1 %>, <%= player.item_2 %>, <%= player.item_3 %>, <%= player.item_4 %>, <%= player.item_5 %></td>
+        </tr>
     <% }); %>
+    </li>
 </ul>

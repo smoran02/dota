@@ -5,11 +5,25 @@ var app = express();
 app.engine('ejs', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 
+app.locals.secondsToTime = function(totalSec){
+    var hours = parseInt( totalSec / 3600 ) % 24;
+    var minutes = parseInt( totalSec / 60 ) % 60;
+    var seconds = totalSec % 60;
+
+    return hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);
+}
+
+app.locals.timeToString = function(time){
+    var d = new Date();
+    d.setTime(time * 1000);
+    return d.toLocaleTimeString() + " " + d.toDateString();
+}
+
 app.get('/', function(request, response){
     response.sendfile(__dirname + '/index.html');
 });
 
-app.get('/:account_id/:match_id', function(req, response){
+app.get('/match/:match_id', function(req, response){
     var account_id = req.params.account_id;
     var match_id = req.params.match_id;
 
@@ -24,11 +38,12 @@ app.get('/:account_id/:match_id', function(req, response){
     request(dotaUrl, function(err, res, body){
         var match = JSON.parse(body);
         response.render('match.ejs', {players: match.result.players,
-                                      match_id: match_id});
+                                      match_id: match_id,
+                                      result: match.result});
     });
 });
 
-app.get('/:account_id', function(req, response){
+app.get('/player/:account_id', function(req, response){
     var account_id = req.params.account_id;
 
     options = {
@@ -40,8 +55,8 @@ app.get('/:account_id', function(req, response){
 
     var dotaUrl = url.format(options);
     request(dotaUrl, function(err, res, body){
-        var results = JSON.parse(body);
-        response.render('results.ejs', {matches: results.result.matches, 
+        var account = JSON.parse(body);
+        response.render('account.ejs', {matches: account.result.matches, 
                                         account_id: account_id});
     });
 });
