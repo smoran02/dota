@@ -33,7 +33,7 @@
             <td><%= player.denies %></td>
             <td><%= player.xp_per_min %></td>
             <td><%= player.gold_per_min %></td>
-            <td><%= player.item_0 %>, <%= player.item_1 %>, <%= player.item_2 %>, <%= player.item_3 %>, <%= player.item_4 %>, <%= player.item_5 %></td>
+            <td><img src="<%= itemToName(player.item_0) %>"><img src="<%= itemToName(player.item_1) %>"><img src="<%= itemToName(player.item_2) %>"><img src="<%= itemToName(player.item_3) %>"><img src="<%= itemToName(player.item_4) %>"><img src="<%= itemToName(player.item_5) %>"></td>
         </tr>
     <% }); %>
     </li>

@@ -42,6 +42,21 @@ app.locals.hero_idLocalizeName = function(hero_id){
     return "";
 }
 
+app.locals.itemToName = function(item){
+    if (item == 0){
+        return 'http://localhost:8080/empty.png';
+    }
+    for (var i = 0; i < itemJSON.items.length; i++){
+        if (item == itemJSON.items[i].id){
+            return 'http://media.steampowered.com/apps/dota2/images/items/' + itemJSON.items[i].name + '_eg.png';
+        }
+    }
+}
+
+app.get('/empty.png', function(request,response){
+    response.sendfile(__dirname + '/empty.png');
+});
+
 app.get('/heroes.json', function(request, response){
     response.sendfile(__dirname + '/heroes.json');
 });
@@ -57,10 +72,22 @@ app.get('/', function(req, response){
         pathname: '/heroes.json'
     }
 
-    var jsonUrl = url.format(options);
-    request(jsonUrl, function(err, res, body){
+    var heroUrl = url.format(options);
+    request(heroUrl, function(err, res, body){
         heroJSON = JSON.parse(body);
     });
+
+    options2 = {
+        protocol: 'http:',
+        host: 'localhost:8080',
+        pathname: '/items.json'
+    }
+
+    var itemUrl = url.format(options2);
+    request(itemUrl, function(err, res, body){
+        itemJSON = JSON.parse(body);
+    });
+
     response.sendfile(__dirname + '/index.html');
 });
 
