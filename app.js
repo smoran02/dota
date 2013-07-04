@@ -44,18 +44,14 @@ app.locals.hero_idLocalizeName = function(hero_id){
 
 app.locals.itemToName = function(item){
     if (item == 0){
-        return 'http://localhost:8080/empty.png';
+        return '';
     }
     for (var i = 0; i < itemJSON.items.length; i++){
         if (item == itemJSON.items[i].id){
-            return 'http://media.steampowered.com/apps/dota2/images/items/' + itemJSON.items[i].name + '_eg.png';
+            return '<img src="http://media.steampowered.com/apps/dota2/images/items/' + itemJSON.items[i].name + '_eg.png">';
         }
     }
 }
-
-app.get('/empty.png', function(request,response){
-    response.sendfile(__dirname + '/empty.png');
-});
 
 app.get('/heroes.json', function(request, response){
     response.sendfile(__dirname + '/heroes.json');
