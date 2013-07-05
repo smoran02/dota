@@ -27,10 +27,27 @@ app.locals.timeToString = function(time){
 app.locals.hero_idToName = function(hero_id){
     for (var i = 0; i < heroJSON.heroes.length; i++){
         if (hero_id == heroJSON.heroes[i].id){
+            return heroJSON.heroes[i].name;
+        }
+    }
+    return "Hero not found.";
+}
+
+app.locals.hero_idToImg = function(hero_id){
+    for (var i = 0; i < heroJSON.heroes.length; i++){
+        if (hero_id == heroJSON.heroes[i].id){
             return 'http://media.steampowered.com/apps/dota2/images/heroes/' + heroJSON.heroes[i].name + '_sb.png';
         }
     }
     return "Hero not found.";
+}
+
+app.locals.nameToHero_id = function(name){
+    for (var i = 0; i < heroJSON.heroes.length; i++){
+        if (name.toLowerCase() == heroJSON.heroes[i].name){
+            return heroJSON.heroes[i].name;
+        }
+    }
 }
 
 app.locals.hero_idLocalizeName = function(hero_id){
@@ -122,6 +139,26 @@ app.get('/player/:account_id', function(req, response){
         var account = JSON.parse(body);
         response.render('account.ejs', {matches: account.result.matches, 
                                         account_id: account_id});
+    });
+});
+
+app.get('/player/:account_id/hero/:hero_id', function(req, response){
+    var hero_id = req.params.hero_id;
+    var account_id = req.params.account_id;
+
+    options = {
+        protocol: 'http:',
+        host: 'api.steampowered.com',
+        pathname: '/IDOTA2Match_570/GetMatchHistory/V001/',
+        query: {key: '7457139B765A368251CF1C88001496A3', account_id: account_id, hero_id: hero_id}
+    }
+
+    var dotaUrl = url.format(options);
+    request(dotaUrl, function(err, res, body){
+        var account = JSON.parse(body);
+        response.render('herohistory.ejs', {matches: account.result.matches,
+                                            account_id: account_id,
+                                            hero_id: hero_id})
     });
 });
 

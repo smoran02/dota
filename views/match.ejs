@@ -4,7 +4,7 @@
         %> Dire Victory <%}%></li>
     <li>Duration: <%- secondsToTime(result.duration) %></li>
     <li>Start Time: <%- timeToString(result.start_time) %></li>
-    <li>Match Details: 
+    <li>Match Details:  
     <table>
         <tr>
             <td>Player Name</td>
@@ -23,7 +23,7 @@
     <% players.forEach(function(player){ %>
         <tr>
             <td><a href='/player/<%= player.account_id %>'><%= player.account_id %></a></td>
-            <td><img src="<%= hero_idToName(player.hero_id) %>"><%= hero_idLocalizeName(player.hero_id) %></td>
+            <td><img src="<%= hero_idToImg(player.hero_id) %>"><%= hero_idLocalizeName(player.hero_id) %></td>
             <td><%= player.level %></td>
             <td><%= player.kills %></td>
             <td><%= player.deaths %></td>

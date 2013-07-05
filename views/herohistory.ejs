@@ -1,0 +1,6 @@
+<h1>Matches for <%= account_id %> playing <%= hero_idLocalizeName(hero_id) %></h1>
+<ul>
+    <% matches.forEach(function(match){ %>
+        <li><a href='/match/<%=match.match_id %>'><%= match.match_id %></a></li>
+    <% }); %>
+</ul>
